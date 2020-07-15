@@ -32,7 +32,9 @@ namespace csharpcore
                         break;
                     
                     case ItemType.Conjured:
-                        
+                        SetConjuredQuality(item);
+                        item.SellIn -= 1;
+                        break;
 
                     default:
                         SetGeneralItemQuality(item);
