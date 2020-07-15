@@ -11,58 +11,39 @@ namespace csharpcore
         const string agedBrie = "Aged Brie";
         const string backstagePasses = "Backstage passes to a TAFKAL80ETC concert";
         
-        public GildedRose(IList<Item> Items)
+        public GildedRose(IList<Item> items)
         {
-            this.Items = Items;
+            this.Items = items;
         }
 
         public void UpdateQuality()
         {
             foreach (var item in Items)
             {
+                switch (item.Name)
+                {
+                    case sulfuras:
+                        SetSulfurasQuality(item);
+                        break;
+                    
+                    case agedBrie:
+                        SetAgedBrieQuality(item);
+                        break;
+                    
+                    case backstagePasses:
+                        SetBackstagePassQuality(item);
+                        break;
+                    
+                    default:
+                        SetGeneralItemQuality(item);
+                        break;
+                }
+                
                 if (item.Name != sulfuras)
                 {
                     item.SellIn -= 1;
                 }
-                
-                if (item.Name != agedBrie && item.Name != backstagePasses)
-                {
-                    item.Quality -= 1;
-                }
-                else
-                {
-                    item.Quality += 1;
 
-                    if (item.Name == backstagePasses)
-                    {
-                        if (item.SellIn < 11)
-                        {
-                            item.Quality += 1;
-                        }
-
-                        if (item.SellIn < 6)
-                        {
-                            item.Quality += 1;
-                        }
-                    }
-                }
-                
-                // updating sellin was here
-                
-                if (item.SellIn < 0)
-                {
-                    if (item.Name != agedBrie && item.Name != backstagePasses && item.Name != sulfuras)
-                    {
-                        item.Quality -= 1;
-                    }
-                    else
-                    {
-                        if (item.Quality < 50)
-                        {
-                            item.Quality += 1;
-                        }
-                    }
-                }
             }
         }
 
@@ -106,19 +87,21 @@ namespace csharpcore
 
         public void SetBackstagePassQuality(Item item)
         {
-            if (item.SellIn <= 10)
-            {
-                item.Quality += 2;
-            }            
-            
-            if (item.SellIn <= 5)
-            {
-                item.Quality += 3;
-            }            
-            
             if (item.SellIn <= 0)
             {
                 item.Quality = 0;
+            }
+            else if (item.SellIn <= 5)
+            {
+                item.Quality += 3;
+            }
+            else if (item.SellIn <= 10)
+            {
+                item.Quality += 2;
+            }
+            else
+            {
+                item.Quality += 1;
             }
             
             ConstrainQualityToValidRange(item);
