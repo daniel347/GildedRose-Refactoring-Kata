@@ -6,11 +6,6 @@ namespace csharpcore
     public class GildedRose
     {
         IList<Item> Items;
-        
-        const string sulfuras = "Sulfuras, Hand of Ragnaros";
-        const string agedBrie = "Aged Brie";
-        const string backstagePasses = "Backstage passes to a TAFKAL80ETC concert";
-        
         public GildedRose(IList<Item> items)
         {
             this.Items = items;
@@ -20,30 +15,30 @@ namespace csharpcore
         {
             foreach (var item in Items)
             {
-                switch (item.Name)
+                switch (ItemClassifier.ClassifyItemByName(item))
                 {
-                    case sulfuras:
+                    case ItemType.Sulfuras:
                         SetSulfurasQuality(item);
                         break;
-                    
-                    case agedBrie:
+
+                    case ItemType.AgedBrie:
                         SetAgedBrieQuality(item);
+                        item.SellIn -= 1;
                         break;
-                    
-                    case backstagePasses:
+
+                    case ItemType.BackstagePasses:
                         SetBackstagePassQuality(item);
+                        item.SellIn -= 1;
                         break;
                     
+                    case ItemType.Conjured:
+                        
+
                     default:
                         SetGeneralItemQuality(item);
+                        item.SellIn -= 1;
                         break;
                 }
-                
-                if (item.Name != sulfuras)
-                {
-                    item.SellIn -= 1;
-                }
-
             }
         }
 
@@ -102,6 +97,20 @@ namespace csharpcore
             else
             {
                 item.Quality += 1;
+            }
+            
+            ConstrainQualityToValidRange(item);
+        }
+
+        public void SetConjuredQuality(Item item)
+        {
+            if (item.SellIn <= 0)
+            {
+                item.Quality -= 4;
+            }
+            else
+            {
+                item.Quality -= 2;
             }
             
             ConstrainQualityToValidRange(item);
