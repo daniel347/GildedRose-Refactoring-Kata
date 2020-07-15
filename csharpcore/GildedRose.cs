@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using csharpcore.ItemUpdaters;
 
 namespace csharpcore
@@ -26,15 +27,9 @@ namespace csharpcore
         {
             foreach (var item in Items)
             {
-                foreach (var updater in updaters)
-                {
-                    if (updater.IsThisItem(item))
-                    {
-                        updater.UpdateQuality(item);
-                        updater.UpdateSellIn(item);
-                        break;
-                    }
-                }
+                var updater = updaters.First(u => u.IsThisItem(item));
+                updater.UpdateQuality(item);
+                updater.UpdateSellIn(item);
             }
         }
     }
