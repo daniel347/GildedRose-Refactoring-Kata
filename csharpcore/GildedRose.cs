@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using csharpcore.ItemUpdaters;
 
 namespace csharpcore
 {
     public class GildedRose
     {
         IList<Item> Items;
+
+        private List<ItemUpdater> updaters = new List<ItemUpdater>()
+        {
+            new SulfurasUpdater(),
+            new AgedBrieUpdater(),
+            new BackstagePassesUpdater(),
+            new ConjuredUpdater(),
+            new ItemUpdater()
+        };
+
         public GildedRose(IList<Item> items)
         {
             this.Items = items;
@@ -15,107 +26,18 @@ namespace csharpcore
         {
             foreach (var item in Items)
             {
-                switch (ItemClassifier.ClassifyItemByName(item))
+                foreach (var updater in updaters)
                 {
-                    case ItemType.Sulfuras:
-                        SetSulfurasQuality(item);
+                    if (updater.IsThisItem(item))
+                    {
+                        updater.UpdateQuality(item);
+                        updater.UpdateSellIn(item);
                         break;
-
-                    case ItemType.AgedBrie:
-                        SetAgedBrieQuality(item);
-                        item.SellIn -= 1;
-                        break;
-
-                    case ItemType.BackstagePasses:
-                        SetBackstagePassQuality(item);
-                        item.SellIn -= 1;
-                        break;
-                    
-                    case ItemType.Conjured:
-                        SetConjuredQuality(item);
-                        item.SellIn -= 1;
-                        break;
-
-                    default:
-                        SetGeneralItemQuality(item);
-                        item.SellIn -= 1;
-                        break;
+                    }
                 }
             }
         }
-
-        private void ConstrainQualityToValidRange(Item item)
-        {
-            item.Quality = Math.Max(Math.Min(50, item.Quality), 0);
-        }
-
-        private void SetGeneralItemQuality(Item item)
-        {
-            if (item.SellIn <= 0)
-            {
-                item.Quality -= 2;
-            }
-            else
-            {
-                item.Quality -= 1;
-            }
-            
-            ConstrainQualityToValidRange(item);
-        }
-
-        private void SetAgedBrieQuality(Item item)
-        {
-            if (item.SellIn <= 0)
-            {
-                item.Quality += 2;
-            }
-            else
-            {
-                item.Quality += 1;
-            }
-            
-            ConstrainQualityToValidRange(item);
-        }
-
-        private void SetSulfurasQuality(Item item)
-        {
-            item.Quality = 80;
-        }
-
-        private void SetBackstagePassQuality(Item item)
-        {
-            if (item.SellIn <= 0)
-            {
-                item.Quality = 0;
-            }
-            else if (item.SellIn <= 5)
-            {
-                item.Quality += 3;
-            }
-            else if (item.SellIn <= 10)
-            {
-                item.Quality += 2;
-            }
-            else
-            {
-                item.Quality += 1;
-            }
-            
-            ConstrainQualityToValidRange(item);
-        }
-
-        private void SetConjuredQuality(Item item)
-        {
-            if (item.SellIn <= 0)
-            {
-                item.Quality -= 4;
-            }
-            else
-            {
-                item.Quality -= 2;
-            }
-            
-            ConstrainQualityToValidRange(item);
-        }
     }
 }
+
+       
