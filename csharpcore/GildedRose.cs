@@ -44,12 +44,12 @@ namespace csharpcore
             }
         }
 
-        public void ConstrainQualityToValidRange(Item item)
+        private void ConstrainQualityToValidRange(Item item)
         {
             item.Quality = Math.Max(Math.Min(50, item.Quality), 0);
         }
 
-        public void SetGeneralItemQuality(Item item)
+        private void SetGeneralItemQuality(Item item)
         {
             if (item.SellIn <= 0)
             {
@@ -63,7 +63,7 @@ namespace csharpcore
             ConstrainQualityToValidRange(item);
         }
 
-        public void SetAgedBrieQuality(Item item)
+        private void SetAgedBrieQuality(Item item)
         {
             if (item.SellIn <= 0)
             {
@@ -77,12 +77,12 @@ namespace csharpcore
             ConstrainQualityToValidRange(item);
         }
 
-        public void SetSulfurasQuality(Item item)
+        private void SetSulfurasQuality(Item item)
         {
             item.Quality = 80;
         }
 
-        public void SetBackstagePassQuality(Item item)
+        private void SetBackstagePassQuality(Item item)
         {
             if (item.SellIn <= 0)
             {
@@ -104,7 +104,7 @@ namespace csharpcore
             ConstrainQualityToValidRange(item);
         }
 
-        public void SetConjuredQuality(Item item)
+        private void SetConjuredQuality(Item item)
         {
             if (item.SellIn <= 0)
             {

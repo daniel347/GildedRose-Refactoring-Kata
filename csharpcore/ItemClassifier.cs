@@ -9,7 +9,7 @@ namespace csharpcore
         const string backstagePasses = "Backstage passes";
         const string conjured = "Conjured";
 
-        static public ItemType ClassifyItemByName(Item item)
+        public static ItemType ClassifyItemByName(Item item)
         {
             if (item.Name.Contains(sulfuras))
             {
